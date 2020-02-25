@@ -1,0 +1,114 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+Part 1
+
+Question 1
+```{r}
+stock_prices <- c(23, 27, 23, 21, 34, 24, 25, 30, 37, 30)
+```
+
+```{r}
+day_of_week <- c("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday")
+```
+Question 2
+```{r}
+day_of_week_factor <- as.factor(day_of_week)
+```
+
+```{r}
+names(stock_prices) <- c(day_of_week)
+```
+
+```{r}
+named_stock_prices
+```
+
+```{r}
+named_stock_prices <- names(stock_prices) <-c("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday")
+```
+
+```{r}
+?names
+```
+
+Question 3
+
+```{r}
+stock_data <- data.frame(stock_prices, named_stock_prices)
+```
+
+```{r}
+View(stock_data)
+```
+
+Question 4
+
+```{r}
+stock_list <- list(
+              "Prices" = list(stock_prices), 
+              "Day" = list(day_of_week), 
+              "Stock_Data" = list(stock_data)
+)
+```
+
+```{r}
+stock_list
+```
+
+Part 2
+
+Question 1
+
+```{r}
+stock_prices[4:6]
+```
+
+```{r}
+stock_prices[stock_prices > 30]
+```
+
+Question 2
+
+```{r}
+str(stock_data)
+```
+
+```{r}
+stock_data[ , 2]
+```
+
+```{r}
+subset(stock_data, stock_prices < 25)
+```
+
+```{r}
+stock_data[ , 1]
+```
+
+```{r}
+stock_data[3, ]
+```
+
+```{r}
+stock_data[1, 3]
+```
+
+Question 4
+
+```{r}
+stock_list
+```
+
+3 Extension
+
+```{r}
+library(tidyquant)
+```
+
+
+
+
+
+
