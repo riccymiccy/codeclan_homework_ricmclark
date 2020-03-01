@@ -1,0 +1,157 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+Question 2.2.1
+```{r}
+quest_num <- c(1, 2, 3)
+mult_by_15_add_4 <- function(x){
+  times_15 <- x * 15
+  add_4 <- times_15 + 4
+  return(add_4)
+}
+
+mult_by_15_add_4(quest_num)
+```
+ 
+Question 2.2.2
+```{r}
+
+quest_list <- c("goose", "apple", "5", "seagull")
+if (quest_list == "goose" || "duck" || "pigeon"){
+  print("bird")
+}
+  else {
+    print("not bird")
+  }
+
+
+```
+
+```{r}
+quest_list <- c("goose", "apple", "5", "seagull")
+ifelse (quest_list %in% c("goose", "duck", "pigeon"),
+  print("bird"), print("not bird")
+
+```
+Question 2.2.3
+
+```{r}
+odd_list <- list(2, 5.3, "x", 7)
+mult_by_10 <- function(x){
+  times_10 <- x * 10
+  return(times_10)
+    } else {
+      print("Invalid input")
+  }
+
+mult_by_10(odd_list)
+
+```
+
+2.3.1
+
+```{r}
+
+library(dplyr)
+sizes <- c(13, 15, 10, 8, 22)
+ifelse(sizes > 10, "Big", "Small")
+sizes
+```
+
+```{r}
+recode(sizes, 13 = "Big", 15 = "Big", 10 = "Small", 8 = "Small", 22 = "Big")
+sizes
+```
+
+```{r}
+case_when(sizes =<10 ~ "Small", sizes > 10 ~ "Big", TRUE ~ as.numeric(x))
+sizes
+
+```
+
+2.3.2
+
+```{r}
+fruit <- c("apple", "apple", "banana", "cherry", "cherry")
+  ifelse("apple" %in% fruit, "alpaca"), 
+  ifelse("banana" %in% fruit, "bonobo"), 
+  ifelse("cherry" %in% fruit, "chipmunk")
+  fruit
+```
+
+```{r}
+fruit <- c("apple", "apple", "banana", "cherry", "cherry")
+  recode(.fruit, "apple" = "alpaca", "banana" = "bonobo", "cherry" = "chipmunk")
+  fruit
+```
+
+```{r}
+case_when(fruit = "apple" ~ alpaca, fruit = "banana" ~ bonobo, fruit = "cherry" ~ "chipmunk")
+print(fruit)
+
+
+```
+Question 2.3.3
+
+```{r}
+wife_age <- c(29L, 30L, 36L, 31L, 22L)
+husband_age <- c(28L, 35L, 32L, 31L, 29L)
+
+ifelse(wife_age > husband_age, "wife older")
+  ifelse(wife_age < husband_age, "husband older")
+  ifelse(wife_age == husband_age, "same age")
+  
+  print wife_age, husband_age
+```
+
+```{r}
+recode()
+```
+
+
+
+
+
+```{r}
+wife_age <- c(29L, 30L, 36L, 31L, 22L)
+husband_age <- c(28L, 35L, 32L, 31L, 29L)
+case_when(wife_age > husband_age ~ "wife older", wife_age < husband_age ~ "husband older", wife_age == husband_age ~ "Same age"
+wife_age, husband_age
+```
+
+2.4.1
+
+```{r}
+my_list <- list(
+  4,
+  "apple",
+  10.5,
+  c("is", "an", "apple"),
+  "apple",
+  c("i", "like", "apples"),
+  8
+)
+for(character in my_list){
+  print(character)
+}
+```
+
+```{r}
+while(my_list = character){
+  print(my_list)
+}
+```
+
+
+```{r}
+pass
+```
+
+
+
+
+
+
+
