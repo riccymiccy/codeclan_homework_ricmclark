@@ -1,0 +1,33 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1583186540812.000,
+    "dirty" : false,
+    "encoding" : "",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "9A8FA48A",
+    "lastKnownWriteTime" : 7594020487934732652,
+    "last_content_update" : 1583186540812,
+    "path" : null,
+    "project_path" : null,
+    "properties" : {
+        "cacheKey" : "D5A2FE6E",
+        "caption" : "africa_health",
+        "contentUrl" : "grid_resource/gridviewer.html?env=&obj=africa_health&cache_key=D5A2FE6E",
+        "displayedObservations" : 227,
+        "environment" : "",
+        "expression" : "africa_health",
+        "object" : "africa_health",
+        "preview" : 0,
+        "totalObservations" : 227,
+        "variables" : 31
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 6,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_dataframe"
+}

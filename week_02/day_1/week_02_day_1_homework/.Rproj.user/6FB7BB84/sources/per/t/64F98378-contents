@@ -1,0 +1,62 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r}
+library(readr)
+library(readxl)
+library(openxlsx)
+library(jsonlite)
+library(haven)
+```
+
+```{r}
+state_income <- read_csv("data/state_income_data.csv", skip = 1, col_names = c("1st Initial", "State", "2002", "2003", "2004", "2005", "2006", "2007", "2008", "2009", "2010", "2011", "2012", "2013", "2014", "2015"))
+```
+
+
+
+
+```{r}
+cars <- read_csv("data/cars.csv", 
+            col_types = cols(X1 = col_character()), 
+                      = cols(mpg, cyl, disp, hp = col_double()),
+                      = cols(vs = logical())
+            )
+```
+
+```{r}
+scotland <- read_table("data/scotland.txt", col_character(as.character))
+```
+
+```{r}
+read_delim("data/steam-200k-sample.csv", delim = ",")
+```
+
+```{r}
+eu_payments <- read_tsv("data/historic_eu_payments.tsv")
+```
+
+```{r}
+africa_health <- read_stata("data/africa_health_data.dta")
+```
+
+
+```{r}
+make_me <- read_file("http://makemeanalyst.com/wp-content/uploads/2017/06/sample_json.txt")
+parse_json(make_me)
+make_me
+```
+
+
+
+
+
+
+
+
+
+
+
+

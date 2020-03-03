@@ -1,0 +1,33 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1583186309073.000,
+    "dirty" : false,
+    "encoding" : "",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "C71F1D3A",
+    "lastKnownWriteTime" : 4547123155,
+    "last_content_update" : 1583186309073,
+    "path" : null,
+    "project_path" : null,
+    "properties" : {
+        "cacheKey" : "37F0D2CA",
+        "caption" : "eu_payments",
+        "contentUrl" : "grid_resource/gridviewer.html?env=&obj=eu_payments&cache_key=37F0D2CA",
+        "displayedObservations" : 28372,
+        "environment" : "",
+        "expression" : "eu_payments",
+        "object" : "eu_payments",
+        "preview" : 0,
+        "totalObservations" : 28372,
+        "variables" : 11
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 5,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_dataframe"
+}

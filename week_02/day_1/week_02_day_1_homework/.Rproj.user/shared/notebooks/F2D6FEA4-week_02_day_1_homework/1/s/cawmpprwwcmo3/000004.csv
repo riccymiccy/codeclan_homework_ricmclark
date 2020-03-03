@@ -1,0 +1,1 @@
+"0","africa_health <- read_stata(""data/africa_health_data.dta"")"

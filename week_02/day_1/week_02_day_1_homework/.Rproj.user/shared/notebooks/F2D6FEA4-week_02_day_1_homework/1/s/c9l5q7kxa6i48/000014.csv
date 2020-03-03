@@ -1,0 +1,7 @@
+"0","cars <- read_csv(""data/cars.csv"", "
+"0","            col_types = cols(X1 = col_character()), "
+"0","                      = cols(mpg, cyl, disp, hp = col_double()),"
+"2","Error: unexpected '=' in:
+""            col_types = cols(X1 = col_character()), 
+                      =""
+"

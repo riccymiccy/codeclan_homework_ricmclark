@@ -1,0 +1,1 @@
+{"frames":[],"message":"Error: unexpected '=' in:\n\"            col_types = cols(X1 = col_character()), \n                      =\"\n"}

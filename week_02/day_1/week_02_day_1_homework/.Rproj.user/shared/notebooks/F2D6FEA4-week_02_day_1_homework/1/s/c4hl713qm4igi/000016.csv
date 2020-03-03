@@ -1,0 +1,3 @@
+"0","scotland <- read_table(""data/scotland.txt"", col_character(as.character))"
+"2","Error in col_character(as.character) : unused argument (as.character)
+"

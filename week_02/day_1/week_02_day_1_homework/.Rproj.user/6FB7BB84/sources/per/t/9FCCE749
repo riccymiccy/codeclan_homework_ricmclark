@@ -1,0 +1,33 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1583182532759.000,
+    "dirty" : false,
+    "encoding" : "",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "9FCCE749",
+    "lastKnownWriteTime" : 140299401691140,
+    "last_content_update" : 1583182532759,
+    "path" : null,
+    "project_path" : null,
+    "properties" : {
+        "cacheKey" : "BC78AECB",
+        "caption" : "state_income",
+        "contentUrl" : "grid_resource/gridviewer.html?env=&obj=state_income&cache_key=BC78AECB",
+        "displayedObservations" : 51,
+        "environment" : "",
+        "expression" : "state_income",
+        "object" : "state_income",
+        "preview" : 0,
+        "totalObservations" : 51,
+        "variables" : 16
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 2,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_dataframe"
+}
