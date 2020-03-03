@@ -4,5 +4,49 @@ output: html_notebook
 ---
 
 
+```{r}
+library(keyring)
+library(RPostgreSQL)
+keyring_unlock("local")
+username <- key_get("postgresql_username", keyring = "local") 
+username <- "richardmichaelclark"
+password <- key_get("postgresql_password", keyring = "local")
+keyring_lock("local")
+db_connect <- dbConnect(drv = PostgreSQL(max.con = 2), user = username, password = password, dbname = "wrestling", host = "localhost")
+rm(username, password)
+```
+
+```{r}
+dbGetQuery(db_connect, "SELECT * FROM wrestlers")
+```
+
+id = int
+Name = varchar
+gender = varchar
+win per_cent = real
+total matches = int
+
+```{r}
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+```{r}
+dbDisconnect(conn = my_db_connection)
+```
 
 
