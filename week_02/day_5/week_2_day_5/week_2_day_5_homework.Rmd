@@ -1,0 +1,74 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r}
+library(keyring)
+library(RPostgreSQL)
+keyring_unlock("local")
+username <- key_get(service = "postgresql_username", keyring = "local") 
+username <- "richardmichaelclark"
+password <- key_get(service = "postgresql_password", keyring = "local")
+keyring_lock("local")
+db_connect <- dbConnect(drv = PostgreSQL(), user = username, password = password, dbname = "acme_employees", host = "localhost")
+rm(username, password)
+```
+
+```{r}
+data <- dbGetQuery(conn = db_connect, statement = "SELECT * FROM public.employees")
+```
+
+
+```{r}
+dbGetQuery(db_connect,
+           "SELECT * FROM employees
+           ")
+```
+
+I cannot get this to work so I will write down my findings and the code I thing would have worked. I justy don't know what I have done wrong and I have been working (going round in circles since Friday night) 
+
+
+Employees: id (primary key), first_name, last_name, email, team_id (foreign key)
+
+Feedbacks: id (primary key), employee_id (foreign key), message, date
+
+Teams: id (primary), name, charge cost
+
+```{r}
+dbGetQuery(db_connect,
+           "SELECT * FROM employees
+           CONCAT 'first_name', ' ', 'last_name'
+           FROM employees AS 'full_name'")
+```
+
+```{r}
+dbGetQuery(db_connect,
+           "SELECT * FROM employees
+           WHERE team_id AS team_name")
+```
+
+```{r}
+dbGetQuery(db_connect,
+           "SELECT team_name, COUNT(id) AS number_of_employees
+           order by number_of_employees DESC")
+```
+
+```{r}
+dbGetQuery(db_connect,
+           "SELECT id
+           WHERE email IS NULL AND 
+           WHERE IS NOT LIKE '%@%'")
+```
+
+
+
+
+
+
+
+
+```{r}
+dbDisconnect(db_connect)
+```
+
