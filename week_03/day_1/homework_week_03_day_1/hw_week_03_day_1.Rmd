@@ -1,0 +1,160 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+```{r}
+library(tidyverse
+        )
+```
+
+
+
+```{r}
+drinks_content <- read_csv("starbucks_drinkMenu_expanded.csv")
+drinks_content
+```
+
+```{r}
+names(drinks_content)
+```
+
+```{r}
+head(drinks_content)
+```
+
+```{r}
+tail(drinks_content)
+```
+
+```{r}
+dim(drinks_content)
+```
+
+```{r}
+?mean
+```
+
+
+
+```{r}
+mean_calories<- mean(drinks_content$Calories)
+mean_calories
+```
+
+```{r}
+?variance
+```
+
+```{r}
+var_calories <- var(drinks_content$Calories)
+var_calories
+```
+
+```{r}
+?normality
+
+```
+
+
+```{r}
+norm_calories <- norm(drinks_content$Calories)
+norm_calories
+```
+
+```{r}
+box_drinks <- boxplot(drinks_content$Calories)
+box_drinks
+```
+
+```{r}
+arr_drinks_content <- arrange(drinks_content, desc(Calories))
+arr_drinks_content
+```
+
+I am keeping the outlier as ther eis a lot of carbs and prtein in it and it makes me thibnk it is supposed to be there.
+
+```{r}
+bev_drinks <- select(drinks_content, Beverage_category, Beverage, Beverage_prep, Calories)
+bev_drinks
+```
+
+```{r}
+bev_drinks_na_gone <- drop_na(bev_drinks)
+bev_drinks_na_gone
+```
+
+```{r}
+filter(bev_drinks_na_gone, Beverage_category == "Classic Espresso Drinks")
+```
+
+```{r}
+drink_calories <- mutate(drinks_content, calorie_diff = 135 - Calories)
+drink_calories
+```
+
+```{r}
+drinks_grouped <- group_by(drinks_content, desc(Beverage_prep))
+drinks_grouped
+```
+
+```{r}
+mean_cal <- sum(drinks_content$Calories) / count(drinks_content$Beverage_prep)
+mean_cal
+```
+
+```{r}
+?group_by
+```
+
+
+
+```{r}
+bev_drinks <- select(drinks_content, Beverage_category, Beverage, Beverage_prep, Calories) %>% 
+  bev_drinks_na_gone <- drop_na(bev_drinks) %>%
+  filt_bev_drinks_na_gone <- filter(bev_drinks_na_gone, Beverage_category == "Classic Espresso Drinks") %>% 
+  drink_calories <- mutate(filt_bev_drinks_na_gone, calorie_diff = (135L - Calories)) %>% 
+  drinks_grouped <- group_by(drink_calories, Beverage_prep)
+  
+```
+
+```{r}
+summary(drink_calories$Calories)
+```
+
+```{r}
+arrange(drink_calories, desc(Calories))
+```
+
+```{r}
+arrange(drink_calories, Calories)
+```
+
+```{r}
+above_average_calories <- filter(drinks_grouped, Calories > mean_calories)
+```
+
+```{r}
+drinks_distribution <- cume_dist(drinks_grouped, percent_rank(25))
+```
+
+```{r}
+?cume_dist
+```
+
+```{r}
+?percent_rank
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+

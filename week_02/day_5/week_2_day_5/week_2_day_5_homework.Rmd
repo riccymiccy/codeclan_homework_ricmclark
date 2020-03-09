@@ -16,7 +16,7 @@ rm(username, password)
 ```
 
 ```{r}
-data <- dbGetQuery(conn = db_connect, statement = "SELECT * FROM public.employees")
+data <- dbGetQuery(conn = db_connect, statement = "SELECT * FROM employees")
 ```
 
 
