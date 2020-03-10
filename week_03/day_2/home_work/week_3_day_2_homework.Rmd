@@ -1,0 +1,138 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r}
+library(tidyverse)
+```
+
+Question 1:
+
+```{r}
+women_in_gov <- read_csv("data/women_in_gov.csv", skip = 3)
+```
+
+```{r}
+women_in_gov
+```
+Question 2.
+```{r}
+names(women_in_gov)
+```
+
+```{r}
+library(janitor)
+```
+
+```{r}
+women_in_gov_save <- women_in_gov
+```
+
+```{r}
+women_in_gov_clean <- clean_names(women_in_gov_save)
+```
+
+```{r}
+view(women_in_gov_clean)
+```
+
+Question 3.
+```{r}
+unique(women_in_gov_clean$indicator_name)
+```
+```{r}
+unique(women_in_gov_clean$indicator_code)
+```
+
+```{r}
+unique(women_in_gov_clean$x64)
+```
+
+```{r}
+women_in_gov_less <- women_in_gov_clean %>% 
+  select(-indicator_name)
+head(women_in_gov_less)
+```
+
+```{r}
+women_in_gov_less <- women_in_gov_less %>% 
+  select(-indicator_code)
+head(women_in_gov_less)
+```
+
+```{r}
+women_in_gov_less <- women_in_gov_less %>% 
+  select(-x64)
+head(women_in_gov_less)
+```
+
+Question 4
+
+```{r}
+women_in_gov_long <- women_in_gov_less %>% 
+  pivot_longer(
+    x1960:x2018,
+    names_to = "Year",
+    values_to = "per_cent"
+  )
+women_in_gov_long
+```
+
+
+Question 5.
+```{r}
+women_in_gov_long %>% 
+  filter(is.na(per_cent))
+```
+
+```{r}
+women_in_gov_long %>% 
+  filter(!is.na(per_cent))
+```
+
+```{r}
+women_in_gov_long %>% 
+  summarise(count = sum(is.na(per_centwomen_in_gov_long %>% 
+  filter(is.na(per_cent)))))
+```
+
+```{r}
+unique(women_in_gov_long$per_cent)
+```
+I deleted them but I did this without realising what I was doing.
+```{r}
+women_in_gov_drop <- women_in_gov_long %>% 
+  drop_na()
+women_in_gov_drop
+```
+On relection, I think the figures should be imputed to 0. 
+```{r}
+women_in_gov_impute <- women_in_gov_long %>% 
+  mutate(per_cent= replace(per_cent,
+                           is.na(per_cent),
+                           0))
+women_in_gov_impute
+```
+
+Question 6.
+```{r}
+boxplot(women_in_gov_impute$per_cent)
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
