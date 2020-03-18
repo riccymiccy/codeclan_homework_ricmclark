@@ -1,0 +1,53 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+## 
+```{r}
+library(tidyverse)
+library(here)
+library(janitor)
+```
+
+# Task 1 - Decathlon Data
+
+## Open file and read it
+
+```{r}
+decathlon <- read_rds(here("raw_data/decathlon.rds"))
+```
+<br>
+
+## 1.1.1 Clean the data  
+
+### One column doesn't have a name. Use rownames_to_column funtion to give it a name.
+```{r}
+decathlon_new <- rownames_to_column(decathlon, var = "athlete")
+```
+<br>
+
+### Now clean the variable names to add underscores, take-away capitals etc. using the clean_names function
+
+```{r}
+decathlon_save <- decathlon_new
+```
+
+```{r}
+decathlon_clean <- clean_names(decathlon_save)
+```
+<br>
+
+### Finally, let's lengthen the data using the pivot_longer function and create two new variable names: events and performance. This last part is critical to make the data easier to analyse.
+<details>
+<summary>**Answer**</summary>
+```{r}
+decathlon_long <- pivot_longer(decathlon_clean, cols = x100m:x1500m, names_to = "events", values_to = "performance")
+```
+</details>
+<br>
+
+## Create a csv with the daz-whiter-than-white data ready to be analysed
+```{r}
+write_csv(decathlon_long, here("clean_data/decathlon_long.csv"))
+```
+
