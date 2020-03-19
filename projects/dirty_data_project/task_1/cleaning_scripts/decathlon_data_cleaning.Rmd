@@ -10,13 +10,21 @@ library(janitor)
 ```
 
 # Task 1 - Decathlon Data
+```{r}
+here::here()
+```
 
 ## Open file and read it
 
 ```{r}
-decathlon <- read_rds(here("raw_data/decathlon.rds"))
+decathlon <- read_rds(here("task_1/raw_data/decathlon.rds"))
 ```
 <br>
+
+```{r}
+view(decathlon)
+```
+
 
 ## 1.1.1 Clean the data  
 
@@ -33,11 +41,18 @@ decathlon_save <- decathlon_new
 ```
 
 ```{r}
-decathlon_clean <- clean_names(decathlon_save)
+?clean_names
+```
+
+
+```{r}
+decathlon_clean <- clean_names(decathlon_save, case = "snake") %>% 
+  mutate(athlete = str_to_lower(athlete))
+  
 ```
 <br>
 
-### Finally, let's lengthen the data using the pivot_longer function and create two new variable names: events and performance. This last part is critical to make the data easier to analyse.
+### Let's now lengthen the data using the pivot_longer function and create two new variable names: events and performance. This last part is critical to make the data easier to analyse.
 <details>
 <summary>**Answer**</summary>
 ```{r}
@@ -45,9 +60,17 @@ decathlon_long <- pivot_longer(decathlon_clean, cols = x100m:x1500m, names_to = 
 ```
 </details>
 <br>
+### Finally let's change all athletes names to lower case
+
+
+```{r}
+here::here()
+```
+
+
 
 ## Create a csv with the daz-whiter-than-white data ready to be analysed
 ```{r}
-write_csv(decathlon_long, here("clean_data/decathlon_long.csv"))
+write_csv(decathlon_long, here("task_1/clean_data/decathlon_long.csv"))
 ```
 

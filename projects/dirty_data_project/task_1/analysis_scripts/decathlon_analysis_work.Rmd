@@ -1,0 +1,102 @@
+---
+title: "decathlon_analysis"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+
+```{r}
+library(tidyverse)
+```
+
+
+```{r}
+library(here)
+```
+
+```{r}
+here::here()
+```
+
+
+```{r}
+decathlon_analysis <- read_csv(here("task_1/clean_data/decathlon_long.csv"))
+```
+
+## Who had the longest long jump seen in the data?
+
+```{r}
+decathlon_analysis %>% 
+  filter(events == "long_jump") %>% 
+  arrange(desc(performance))
+```
+<br>
+
+## What was the average 100m time in each competition?
+
+```{r}
+decathlon_analysis %>% 
+  filter(events == "x100m") %>% 
+  group_by(competition) %>% 
+  summarise(average_100m = round(mean(performance),2))
+```
+<br>
+
+## Who had the highest total points across both competitions?
+```{r}
+decathlon_analysis %>%
+  distinct(athlete, competition, points) %>% 
+  group_by(athlete) %>% 
+  summarise(total_points = sum(points)) %>% 
+  arrange(desc(total_points))
+```
+```{r}
+?summarise
+```
+
+<br>
+
+## What was the shot-put scores for the top three competitors in each competition?
+```{r}
+
+```
+
+<br>
+
+## What was the average points for competitors who ran the 400m in less than 50 seconds vs. those than ran 400m in more than 50 seconds?
+```{r}
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
