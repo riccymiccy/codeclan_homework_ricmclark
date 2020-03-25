@@ -367,12 +367,12 @@ summary {
 
 
 <pre class="r"><code>library(tidyverse)</code></pre>
-<pre><code>## ── Attaching packages ─────────────────────────────────────── tidyverse 1.3.0 ──</code></pre>
+<pre><code>## ── Attaching packages ────────────────────────────────────────────── tidyverse 1.3.0 ──</code></pre>
 <pre><code>## ✓ ggplot2 3.2.1     ✓ purrr   0.3.3
 ## ✓ tibble  2.1.3     ✓ dplyr   0.8.4
 ## ✓ tidyr   1.0.2     ✓ stringr 1.4.0
 ## ✓ readr   1.3.1     ✓ forcats 0.5.0</code></pre>
-<pre><code>## ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+<pre><code>## ── Conflicts ───────────────────────────────────────────────── tidyverse_conflicts() ──
 ## x dplyr::filter() masks stats::filter()
 ## x dplyr::lag()    masks stats::lag()</code></pre>
 <pre class="r"><code>library(here)</code></pre>
@@ -408,6 +408,24 @@ summary {
 ##  9 ojaniemi    16   8006 OlympicG    long_jump        7.5 
 ## 10 schwarzl    10   8102 OlympicG    long_jump        7.49
 ## # … with 31 more rows</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th>Athlete</th>
+<th>Competition</th>
+<th>Event</th>
+<th>Performance</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Brian Clay</td>
+<td>Olympic Games</td>
+<td>Long Jump</td>
+<td>7.96m</td>
+</tr>
+</tbody>
+</table>
 <p><br></p>
 </div>
 <div id="what-was-the-average-100m-time-in-each-competition" class="section level2">
@@ -421,6 +439,24 @@ summary {
 ##   &lt;chr&gt;              &lt;dbl&gt;
 ## 1 Decastar            11.2
 ## 2 OlympicG            10.9</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th>Competition</th>
+<th>Average 100m time</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Decastar</td>
+<td>11.18s</td>
+</tr>
+<tr class="even">
+<td>Olympic Games</td>
+<td>10.92s</td>
+</tr>
+</tbody>
+</table>
 <p><br></p>
 </div>
 <div id="who-had-the-highest-total-points-across-both-competitions" class="section level2">
@@ -444,15 +480,134 @@ summary {
 ##  9 barras           15775
 ## 10 macey             8414
 ## # … with 22 more rows</code></pre>
-<pre class="r"><code>?summarise</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th>Athlete</th>
+<th>Total Points (across both competitions)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Roman Sebrle</td>
+<td>17,110</td>
+</tr>
+</tbody>
+</table>
 <p><br></p>
 </div>
 <div id="what-was-the-shot-put-scores-for-the-top-three-competitors-in-each-competition" class="section level2">
 <h2>What was the shot-put scores for the top three competitors in each competition?</h2>
+<pre class="r"><code>decathlon_analysis %&gt;%
+  distinct(athlete, competition, events, performance) %&gt;% 
+  filter(events == &quot;shot_put&quot;) %&gt;% 
+  filter(competition == &quot;OlympicG&quot;) %&gt;% 
+  arrange(desc(performance))</code></pre>
+<pre><code>## # A tibble: 28 x 4
+##    athlete     competition events   performance
+##    &lt;chr&gt;       &lt;chr&gt;       &lt;chr&gt;          &lt;dbl&gt;
+##  1 sebrle      OlympicG    shot_put        16.4
+##  2 karpov      OlympicG    shot_put        15.9
+##  3 macey       OlympicG    shot_put        15.7
+##  4 parkhomenko OlympicG    shot_put        15.7
+##  5 zsivoczky   OlympicG    shot_put        15.3
+##  6 smith       OlympicG    shot_put        15.2
+##  7 clay        OlympicG    shot_put        15.2
+##  8 terek       OlympicG    shot_put        15.2
+##  9 pogorelov   OlympicG    shot_put        15.1
+## 10 ojaniemi    OlympicG    shot_put        15.0
+## # … with 18 more rows</code></pre>
+<pre class="r"><code>decathlon_analysis %&gt;%
+  distinct(athlete, competition, events, performance) %&gt;% 
+  filter(events == &quot;shot_put&quot;) %&gt;% 
+  filter(competition == &quot;Decastar&quot;) %&gt;% 
+  arrange(desc(performance))</code></pre>
+<pre><code>## # A tibble: 13 x 4
+##    athlete     competition events   performance
+##    &lt;chr&gt;       &lt;chr&gt;       &lt;chr&gt;          &lt;dbl&gt;
+##  1 yurkov      Decastar    shot_put        15.2
+##  2 sebrle      Decastar    shot_put        14.8
+##  3 karpov      Decastar    shot_put        14.8
+##  4 martineau   Decastar    shot_put        14.6
+##  5 hernu       Decastar    shot_put        14.4
+##  6 warners     Decastar    shot_put        14.3
+##  7 clay        Decastar    shot_put        14.3
+##  8 bernard     Decastar    shot_put        14.2
+##  9 barras      Decastar    shot_put        14.1
+## 10 mcmullen    Decastar    shot_put        13.8
+## 11 zsivoczky   Decastar    shot_put        13.5
+## 12 bourguignon Decastar    shot_put        13.5
+## 13 nool        Decastar    shot_put        12.7</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th>Athlete</th>
+<th>Competion</th>
+<th>Event</th>
+<th>Performance</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Roman Sebrle</td>
+<td>Olympic Games</td>
+<td>Shot Put</td>
+<td>16.36m</td>
+</tr>
+<tr class="even">
+<td>Dmitriy Karpov</td>
+<td>Olympic Games</td>
+<td>Shot Put</td>
+<td>15.93m</td>
+</tr>
+<tr class="odd">
+<td>Dean Macey</td>
+<td>Olympic Games</td>
+<td>Shot Put</td>
+<td>15.73m</td>
+</tr>
+<tr class="even">
+<td>Oleksandr Yurkov</td>
+<td>Decastar</td>
+<td>Shot Put</td>
+<td>15.19m</td>
+</tr>
+<tr class="odd">
+<td>Roman Sebrle</td>
+<td>Decastar</td>
+<td>Shot Put</td>
+<td>14.83m</td>
+</tr>
+<tr class="even">
+<td>Dmitriy Karpov</td>
+<td>Decastar</td>
+<td>Shot Put</td>
+<td>14.77m</td>
+</tr>
+</tbody>
+</table>
 <p><br></p>
 </div>
 <div id="what-was-the-average-points-for-competitors-who-ran-the-400m-in-less-than-50-seconds-vs.those-than-ran-400m-in-more-than-50-seconds" class="section level2">
 <h2>What was the average points for competitors who ran the 400m in less than 50 seconds vs. those than ran 400m in more than 50 seconds?</h2>
+<pre class="r"><code>decathlon_analysis %&gt;%
+  distinct(events, performance, points) %&gt;% 
+  filter(events == &quot;x400m&quot;) %&gt;% 
+  arrange(performance)</code></pre>
+<pre><code>## # A tibble: 41 x 3
+##    events performance points
+##    &lt;chr&gt;        &lt;dbl&gt;  &lt;dbl&gt;
+##  1 x400m         46.8   8725
+##  2 x400m         48.0   8343
+##  3 x400m         48.4   8893
+##  4 x400m         48.4   8099
+##  5 x400m         48.5   7926
+##  6 x400m         48.6   7865
+##  7 x400m         48.6   8004
+##  8 x400m         48.7   8030
+##  9 x400m         48.7   8237
+## 10 x400m         48.8   8235
+## # … with 31 more rows</code></pre>
 </div>
 
 

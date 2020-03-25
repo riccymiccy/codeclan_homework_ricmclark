@@ -34,6 +34,9 @@ decathlon_analysis %>%
   filter(events == "long_jump") %>% 
   arrange(desc(performance))
 ```
+| Athlete    | Competition   | Event     | Performance |
+|------------|---------------|-----------|-------------|
+| Brian Clay | Olympic Games | Long Jump | 7.96m       |
 <br>
 
 ## What was the average 100m time in each competition?
@@ -44,6 +47,10 @@ decathlon_analysis %>%
   group_by(competition) %>% 
   summarise(average_100m = round(mean(performance),2))
 ```
+| Competition   | Average 100m time |
+|---------------|-------------------|
+| Decastar      | 11.18s            |
+| Olympic Games | 10.92s            |
 <br>
 
 ## Who had the highest total points across both competitions?
@@ -54,24 +61,44 @@ decathlon_analysis %>%
   summarise(total_points = sum(points)) %>% 
   arrange(desc(total_points))
 ```
-```{r}
-?summarise
-```
-
+| Athlete      | Total Points (across both competitions) |
+|--------------|-----------------------------------------|
+| Roman Sebrle | 17,110                                  |
 <br>
 
 ## What was the shot-put scores for the top three competitors in each competition?
 ```{r}
-
+decathlon_analysis %>%
+  distinct(athlete, competition, events, performance) %>% 
+  filter(events == "shot_put") %>% 
+  filter(competition == "OlympicG") %>% 
+  arrange(desc(performance))
 ```
-
+```{r}
+decathlon_analysis %>%
+  distinct(athlete, competition, events, performance) %>% 
+  filter(events == "shot_put") %>% 
+  filter(competition == "Decastar") %>% 
+  arrange(desc(performance))
+```
+| Athlete          | Competion     | Event    | Performance |
+|------------------|---------------|----------|-------------|
+| Roman Sebrle     | Olympic Games | Shot Put | 16.36m      |
+| Dmitriy Karpov   | Olympic Games | Shot Put | 15.93m      |
+| Dean Macey       | Olympic Games | Shot Put | 15.73m      |
+| Oleksandr Yurkov | Decastar      | Shot Put | 15.19m      |
+| Roman Sebrle     | Decastar      | Shot Put | 14.83m      |
+| Dmitriy Karpov   | Decastar      | Shot Put | 14.77m      |
 <br>
 
 ## What was the average points for competitors who ran the 400m in less than 50 seconds vs. those than ran 400m in more than 50 seconds?
 ```{r}
-
+decathlon_analysis %>%
+  distinct(events, performance, points) %>% 
+  filter(events == "x400m") %>% 
+  arrange(performance)
+  
 ```
-
 
 
 
