@@ -1,0 +1,63 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r}
+library(tidyverse)
+library(CodeClanData)
+```
+
+```{r}
+game_sales
+```
+
+```{r}
+view(game_salesX)
+```
+
+```{r}
+ggplot(game_sales) +
+  aes(publisher, critic_score) +
+  geom_point() +
+  scale_color_gradient(low = "yellow", high = "magenta")
+```
+
+
+
+```{r}
+ggplot(game_sales) +
+  aes(genre, critic_score) +
+  geom_point() +
+  scale_color_gradient(low = "yellow", high = "magenta")
+```
+
+
+```{r}
+game_score <- ggplot(game_sales) +
+  geom_tile(aes(x = name, y = critic_score, fill = user_score)) +
+  scale_color_gradient(low = "yellow", high = "magenta")
+```
+
+
+```{r}
+ggplot(game_sales) +
+  aes(x = name, fill = interaction(user_score, critic_score)) +
+  geom_bar() +
+  scale_fill_hue()
+```
+
+```{r}
+ggplot(game_sales) +
+  aes(x = name, fill = interaction(user_score, critic_score)) +
+  geom_bar() +
+  scale_fill_hue(h = c(120, 300), c = 40, l = 45)
+```
+
+
+
+
+
+
+
+
