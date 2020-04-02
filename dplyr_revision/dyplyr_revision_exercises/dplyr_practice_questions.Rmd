@@ -1,0 +1,107 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+```{r}
+library(tidyverse)
+
+```
+
+```{r}
+salaries <- read_csv("data/salaries.csv")
+
+salaries
+```
+Q1.
+```{r}
+begin_sal <- salaries %>% 
+  select(beginning_salary, current_salary)
+
+begin_sal
+```
+Q2.
+```{r}
+emp_fifty_twenty <- salaries %>% 
+  filter(age > 50, current_salary > 20000)
+
+emp_fifty_twenty
+```
+
+```{r}
+?arrange
+```
+
+Q3. 
+```{r}
+arrange(salaries, desc(current_salary))
+```
+
+
+Q4.
+```{r}
+salary_in_pence <- salaries %>% 
+  mutate(beginning_salary_pence = beginning_salary * 100,
+         current_salary_pence = current_salary * 100)
+
+salary_in_pence
+```
+```{r}
+?summarise
+```
+
+
+Q5.
+```{r}
+summarise(salaries, max(age), min(age))
+```
+
+Q6. 
+```{r}
+summarise(salaries, min(current_salary), max(current_salary))
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
