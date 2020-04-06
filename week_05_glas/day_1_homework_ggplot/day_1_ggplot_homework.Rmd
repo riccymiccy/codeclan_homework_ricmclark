@@ -1,0 +1,164 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r}
+library(tidyverse)
+```
+
+```{r}
+library(CodeClanData)
+```
+
+Q1. 
+
+```{r}
+view(backpack)
+```
+
+Variable names: 
+backpack_weight, body_weight, ratio, back_problems, major, year, sex, status, units
+
+```{r}
+dim(backpack)
+```
+
+Q2.
+
+```{r}
+backpack %>% 
+  summarise(max(backpack_weight), min(backpack_weight))
+```
+
+```{r}
+backpack %>% 
+  ggplot(aes(x = backpack_weight)) +
+  geom_bar()
+```
+
+The distribution shows the weight as they increase (x axis) and the frequency (count) of backpacks with that weight (y axis)
+
+Q3.
+
+```{r}
+backpack %>% 
+  ggplot(aes(x = backpack_weight)) +
+  geom_bar() +
+  facet_wrap(~ sex, ncol = 2)
+```
+
+The mode of the female backpack weights is  slightly lower than the male. The big outlier in the weights is with the males. There is a greater frequency in kighter backpacks for females with a more even and wider spread of weights for males.
+
+Q4. 
+
+```{r}
+backpack %>% 
+  ggplot(aes(x = backpack_weight, y = body_weight)) +
+  geom_line() +
+  geom_smooth()
+```
+
+I was expecting to see a more obvious curve to the plot and although the smoothed plot shows a gradual increase in bodyweight is likely to indicate a heavier backpack weight it is not proportional.
+
+Q5. 
+
+```{r}
+backpack %>% 
+  ggplot(aes(x = backpack_weight, y = body_weight)) +
+  geom_line() +
+  geom_smooth() +
+  facet_wrap(~ sex, ncol = 2)
+```
+
+The relationship smoothed curve is not vastly different between the sexes. This is perhaps representative of the fact that as bodyweight increases it is not specifically an indication of an increase of strength or a body's ability to absorb greater forces. Due to the outlier in male backpack weight, the distribution of men's is wider.
+
+Q6.
+
+```{r}
+backpack %>% 
+  count(back_problems)
+```
+
+32% of students report backpain.
+
+Q7.
+
+```{r}
+backpack %>% 
+  group_by(sex) %>% 
+  mutate(per_cent_back_prob = (count(back_problems)/count(sex))) %>% 
+  summarise(sex, per_cent_back_prob)
+```
+
+```{r}
+backpack %>% 
+  group_by(sex) %>% 
+  summarise(sum(back_problems))
+  
+```
+
+```{r}
+backpack %>% 
+  filter(sex == "Male") %>% 
+  count(back_problems)
+
+ 
+```
+```{r}
+(8 / (8 + 37)) * 100
+```
+17.8% for males
+
+
+
+```{r}
+backpack %>% 
+  filter(sex == "Female") %>% 
+  count(back_problems)
+```
+
+```{r}
+(24 / (24 + 31)) * 100
+```
+
+43.6% for females
+
+Q8.
+```{r}
+backpack %>% 
+  ggplot(aes(x = backpack_weight, y = back_problems)) +
+  geom_line() +
+  geom_smooth() +
+  facet_wrap(~ sex, ncol = 2)
+```
+
+```{r}
+backpack %>% 
+  ggplot(aes(x = body_weight, y = back_problems)) +
+  geom_line() +
+  geom_smooth() +
+  facet_wrap(~ sex, ncol = 2)
+```
+
+```{r}
+backpack %>% 
+  ggplot(aes(x = ratio, y = back_problems)) +
+  geom_line() +
+  geom_smooth() +
+  facet_wrap(~ sex, ncol = 2)
+```
+
+Looking at all three of these graphs there is an increase in back problems as backpackweight and boydweight and the ratio between the two increases and then it tends to level off and sometimes go down. This may be instances where the people that are carrying the heavier backpacks are generally stronger proportionally than others regardless of their bodyweight.
+
+
+
+
+
+
+
+
+
+
+
+
