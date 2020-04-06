@@ -12,6 +12,8 @@ salaries <- read_csv("data/salaries.csv")
 
 salaries
 ```
+Section 1
+
 Q1.
 ```{r}
 begin_sal <- salaries %>% 
@@ -59,23 +61,140 @@ Q6.
 ```{r}
 summarise(salaries, min(current_salary), max(current_salary))
 ```
+Q7.
+```{r}
+emp_under_thirty <- salaries %>% 
+  filter(age < 30)
 
+emp_under_thirty
+```
+Q8.
+```{r}
+edu_salaries <- salaries %>% 
+  arrange(educational_level, age)
 
+edu_salaries
+```
 
+```{r}
+library(DT)
+```
 
+```{r}
+salaries_bucket <- edu_salaries %>%
+  mutate(age_bucket = case_when(age >= 20.00 & age <= 29.99 ~ "20-29",
+                                age >= 30.00 & age <= 39.99 ~ "30-39",
+                                age >= 40.00 & age <= 49.99 ~ "40-49",
+                                age >= 50.00 & age <= 59.99 ~ "50-59",
+                                age >= 60.00 & age <= 69.99 ~ "60-69"))
+salaries_bucket
+```
 
+Q9.
+```{r}
+salaries_bucket %>% 
+  select(beginning_salary, job_seniority, age, current_salary, educational_level, work_experience, age_bucket)
+```
 
+Q10.
+```{r}
+salaries_bucket %>% 
+  filter(work_experience < 2.00 | educational_level < 12.00)
+```
 
+Q11.
 
+```{r}
+salaries_bucket %>% 
+  mutate(current_salary_in_k = round(current_salary / 1000, 0), beginning_salary_in_k = round(beginning_salary / 1000, 0)) %>% 
+  
+```
 
+Q12.
+```{r}
+fem_secur_off <- salaries_bucket %>% 
+  filter(gender == "female", employment_category == "security officer")
+fem_secur_off
+```
+Q13.
+```{r}
+salaries_bucket %>% 
+  group_by(employment_category) %>% 
+  summarise(mean(current_salary))
+```
 
+Q14.
+```{r}
+salaries_bucket %>% 
+  filter(gender == "male") %>% 
+  group_by(employment_category) %>% 
+  summarise(mean(current_salary))
+```
 
+Q15.
+```{r}
+salaries_bucket %>%
+  select("gender", "is_white") %>%
+  group_by(gender, is_white) %>% 
+  count()
+```
 
+Q16.
+```{r}
+salaries_bucket %>%
+  mutate(mean_age = mean(current_salary))
+```
 
+```{r}
+salaries_bucket %>% 
+  group_by(is_white) %>% 
+  mutate(mean_sal = mean(current_salary))
+```
 
+I see that the average salary for white people is alost £3,000 more a year.
 
+Section 2.
 
+Q1. 
+```{r}
+salaries_bucket %>% 
+  group_by(educational_level) %>% 
+  filter(educational_level <= 16) %>% 
+  summarise(mean_salary = mean(current_salary)) %>% 
+  arrange(desc(mean_salary))
+```
+Q2.
+```{r}
+salaries_bucket %>% 
+  group_by(employment_category, gender) %>% 
+  filter(work_experience > 2.0) %>% 
+  summarise(mean_salary = mean(current_salary))
+```
 
+Q3.
+```{r}
+salaries_bucket %>%
+  group_by(employment_category) %>%
+  summarise(diff_mean_med_sal = (mean(current_salary)-median(current_salary))) %>% 
+  select(employment_category, diff_mean_med_sal) %>% 
+  arrange(desc(diff_mean_med_sal))
+```
+
+Section 3
+
+Q1.
+
+```{r}
+library(readr)
+```
+
+```{r}
+beer <- read_delim("data/beer.txt", delim = ";")
+beer
+```
+```{r}
+view(beer)
+```
 
 
 
