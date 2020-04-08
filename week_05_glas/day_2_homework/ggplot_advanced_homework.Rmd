@@ -1,0 +1,85 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+GGplot advance homework
+
+```{r}
+library(tidyverse)
+library(CodeClanData)
+```
+
+```{r}
+view(qb_revenue_breakdown)
+```
+
+```{r}
+head(qb_revenue_breakdown)
+```
+
+```{r}
+dim(qb_revenue_breakdown)
+```
+```{r}
+?geom_bar
+```
+
+Part 1
+Q1.
+```{r}
+ggplot(qb_revenue_breakdown) +
+  aes(x = Year, fill = Revenue) +
+  geom_bar()
+```
+
+I just cannot get this to work
+
+Q2.
+
+```{r}
+head(qb_monthly_sales)
+```
+```{r}
+?geom_line
+```
+
+
+```{r}
+ggplot(qb_monthly_sales) +
+  geom_line(aes(x = date, y = cashflow$"Kwikbit Unit 1 Sales")) 
+  
+```
+```{r}
+qb_monthly_sales %>% 
+  filter(Cashflow$)
+```
+
+
+
+Q3. 
+
+```{r}
+qb_monthly_sales %>% 
+  select(Cashflow$Date)
+```
+
+Q4.
+
+```{r}
+view(qb_competitors)
+```
+
+```{r}
+ggplot(qb_competitors) +
+  aes(x = Company, y = Revenue, fill = Year) +
+  geom_area()
+```
+Q5.
+```{r}
+ggplot(qb_competitors) +
+  aes(x = Company, y = Revenue, fill = Year) +
+  geom_line()
+```
+
+

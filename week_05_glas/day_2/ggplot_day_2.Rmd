@@ -1,0 +1,495 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r}
+library(tidyverse)
+```
+Purrrrrrrrrrrrrrrrrrrrrrr
+
+map() is the main one.
+
+Iterates over a data structure and runs a function that you provide on each "element" of the data structure. replaces 'for' loops.
+
+map_<something>()
+<something> is data type they return
+e.g. map_dbl() return a vector that contains doubles i.e. numerical
+
+```{r}
+colour_feelings <- list(
+    blue   = c("Sad", "Calm"),
+    red    = c("Angry", "Energetic", "Warm"),
+    green  = c("Calm", "Nature"),
+    yellow = c("Happy", "Warm", "Sunny")
+)
+```
+
+list on which each element is a character vector.
+
+```{r}
+colour_feelings$blue
+```
+
+```{r}
+for(item in colour_feelings){
+  print(length(item))
+}
+```
+
+```{r}
+map(.x = colour_feelings, .f = length)
+```
+
+```{r}
+# pass extra arguments after .f
+map(.x = colour_feelings, .f = paste, collapse = ", ")
+```
+
+```{r}
+colour_translator <- list(
+  blue   = "gorm",
+    red    = "dearg",   
+    green  = "uaine",
+    yellow = "buidhe"   
+)
+
+```
+
+We want to paste "Translation: " in front of each of these words
+
+```{r}
+add_translation <- function(text){
+  return(paste("Translation: ", text))
+}
+```
+
+```{r}
+add_translation("gorm")
+```
+
+```{r}
+map(.x = colour_translator, .f = add_translation)
+```
+
+purrr let's you define little "bespoke" custom-fitted functions to do wrangling.
+
+```{r}
+map(.x = colour_translator, .f = ~ paste("Transalation: ", .x))
+```
+
+dataframes in R are just lists where each element is a vector and the label of the element is like the column head.
+
+```{r}
+library(CodeClanData)
+```
+
+```{r}
+colour_wavelengths <- list(
+    blue   = 470,
+    red    = 665,
+    green  = 550,
+    yellow = 600
+)
+```
+
+```{r}
+map(colour_translator, nchar)
+```
+
+```{r}
+map(colour_wavelengths, round, digits = -2)
+```
+
+```{r}
+map(colour_wavelengths, ~ .x/(1*(10^9)))
+# 1E9 is scientific notation is 1 * 10^9
+```
+
+```{r}
+#colour_feelings
+map_dbl(colour_feelings, length)
+```
+
+```{r}
+map_int(colour_feelings, length)
+```
+
+```{r}
+flatten_chr(colour_feelings)
+```
+
+```{r}
+studentslist <- as.list(students)
+students
+```
+
+```{r}
+students <- map_df(students, sort)
+```
+
+conditional mapping:
+
+```{r}
+blue <- list(
+    translation = "gorm",
+    feelings    = c("Sad", "Calm"),
+    primary     = "Yes",
+    wavelength  = 470
+)
+```
+
+```{r}
+# p is a predicate = logical i.e. condition/question
+map_if(.x = blue, .p = is.character, .f = nchar)
+```
+
+```{r}
+# apply paste only to elements of blue with a length > 1
+
+map_if(.x = blue, .p = ~ length(.x) > 1, .f = paste, collapse = ", ")
+```
+
+```{r}
+str(colour_list)
+```
+
+```{r}
+map(colour_list, "wavelength")
+```
+
+```{r}
+map(colour_list, "feelings")
+```
+# not the best way of doing things
+```{r}
+map(colour_list, 4)
+```
+
+```{r}
+colour_list_feelings <- map(colour_list, "feelings")
+map(colour_list_feelings, length)
+```
+
+API application programming interface
+APIs return JSON javascript object notation
+R converts json to nested list
+
+Colours and themes
+
+http://sape.inf.usi.ch/quick-reference/ggplot2/colour
+
+Also look up hexidecimal colours
+
+```{r}
+ggplot(students) +
+  aes(x = reaction_time) +
+  geom_histogram(fill = "magenta")
+```
+
+```{r}
+ggplot(students) +
+  aes(x = reaction_time) +
+  geom_histogram(fill = hcl(200, 50, 50))
+```
+
+```{r}
+ggplot(students) +
+  aes(x = reaction_time, y = height_cm) +
+  geom_point(colour = "violetred1")
+```
+
+
+```{r}
+ggplot(pets, aes(weight, age, colour = sex)) +
+  geom_point()
+```
+
+```{r}
+ggplot(pets, aes(weight, age, colour = sleep)) +
+  geom_point() +
+  scale_colour_gradient(low = "grey0", high = "grey100")
+```
+if colour is fill then scale is fill (make sense?)
+
+```{r}
+ggplot(pets, aes(weight, age, colour = sleep)) +
+  geom_point() +
+  scale_colour_gradient(low = "seagreen2", high = "turquoise4")
+```
+
+```{r}
+ggplot(pets, aes(weight, age, colour = sleep)) +
+  geom_point() +
+  scale_colour_gradient2(low = "blue", high = "red", mid = "white", midpoint = 15)
+```
+
+
+Geom_raster is a heat map
+```{r}
+ggplot(volcano, aes(x = x, y = y, fill = height)) +
+  geom_raster() +
+  scale_fill_gradientn(colours = c("chartreuse1", "maroon1"))
+  
+```
+
+```{r}
+ggplot(volcano, aes(x = x, y = y, fill = height)) +
+  geom_raster() +
+  scale_fill_gradientn(colours = colorspace::terrain_hcl(10))
+```
+
+https://colorbrewer2.org/#type=sequential&scheme=OrRd&n=3
+
+```{r}
+ggplot(volcano, aes(x = x, y = y, fill = height)) +
+  geom_raster() +
+  scale_fill_distiller(palette = "OrRd")
+```
+
+```{r}
+ggplot(temp_df) +
+  geom_raster(aes(x = month, y = year, fill = max_temp)) +
+  scale_fill_gradient(low = "olivedrab2", high = "darkorchid2")
+```
+
+```{r}
+ggplot(temp_df) +
+  geom_raster(aes(x = month, y = year, fill = max_temp)) +
+  scale_fill_gradient2(low = "dodgerblue4", high = "deeppink4", mid = "darkorange2", midpoint = 10)
+```
+
+```{r}
+ggplot(temp_df) +
+  geom_raster(aes(x = month, y = year, fill = max_temp)) +
+  scale_fill_gradientn(colours = colorspace::terrain_hcl(28))
+```
+
+```{r}
+ggplot(temp_df) +
+  geom_raster(aes(x = month, y = year, fill = max_temp)) +
+  scale_fill_distiller(palette = "Dark2")
+```
+
+```{r}
+ggplot(students) +
+  aes(x = school_year, fill = superpower) +
+  geom_bar()
+```
+
+```{r}
+ggplot(students) +
+  aes(x = school_year, fill = superpower) +
+  geom_bar() +
+scale_fill_hue(h = c(120, 300))
+```
+
+```{r}
+ggplot(students) +
+  aes(x = school_year, fill = superpower) +
+  geom_bar() +
+  scale_fill_brewer(palette = "Set1")
+```
+
+```{r}
+ggplot(students) +
+  aes(x = school_year, fill = superpower) +
+  geom_bar() +
+  scale_fill_grey()
+```
+
+```{r}
+ggplot(students) +
+  aes(x = school_year, fill = superpower) +
+  geom_bar() +
+  scale_fill_grey(start = 0, end = 0.5)
+```
+
+```{r}
+ggplot(students) +
+  aes(x = school_year, fill = superpower) +
+  geom_bar() +
+  scale_fill_manual(values = c(
+    "Fly" = "red",
+    "Freeze time" = "blue",
+    "Invisibility" = "green",
+    "Telepathy" = "yellow"
+  ))
+```
+
+```{r}
+ggplot(students) +
+  aes(x = school_year, fill = superpower) +
+  geom_bar() +
+  scale_fill_manual(values = c("red", "blue", "green", "yellow"))
+```
+
+```{r}
+ggplot(students) +
+  aes(x = school_year, fill = superpower) +
+  geom_bar() +
+  scale_fill_manual(values = wes_palette("GrandBudapest1"))
+```
+
+```{r}
+ggplot(chinesemeal) +
+  aes(x = Year, colour = FoodType, y = CaloriesPerDay) +
+  geom_line()
+```
+
+
+
+```{r}
+ggplot(chinesemeal) +
+  aes(x = Year, colour = FoodType, y = CaloriesPerDay) +
+  geom_line() +
+  scale_colour_hue(h = c(60, 2000))
+```
+
+```{r}
+ggplot(chinesemeal) +
+  aes(x = Year, colour = FoodType, y = CaloriesPerDay) +
+  geom_line() +
+  scale_colour_grey(start = 0, end = 0.7)
+```
+
+```{r}
+ggplot(chinesemeal) +
+  aes(x = Year, colour = FoodType, y = CaloriesPerDay) +
+  geom_line() +
+  scale_colour_brewer(palette = "Accent")
+```
+
+```{r}
+ggplot(chinesemeal) +
+  aes(x = Year, colour = FoodType, y = CaloriesPerDay) +
+  geom_line() +
+  scale_colour_manual(values = c("red", "blue", "green", "orange"))
+```
+
+guide_colour_bar for continuous data
+
+```{r}
+ggplot(chinesemeal) +
+  aes(x = Year, colour = FoodType, y = CaloriesPerDay) +
+  geom_line() +
+  scale_colour_hue(guide = guide_legend(nrow = 3))
+```
+
+```{r}
+ggplot(chinesemeal) +
+  aes(x = Year, colour = FoodType, y = CaloriesPerDay) +
+  geom_line() +
+  scale_colour_hue(guide = guide_legend(reverse = TRUE))
+```
+
+```{r}
+ggplot(chinesemeal) +
+  aes(x = Year, colour = FoodType, y = CaloriesPerDay) +
+  geom_line() +
+  scale_colour_hue(guide = guide_legend(keywidth = 1, keyheight = 6, reverse = TRUE))
+```
+
+```{r}
+ggplot(chinesemeal) +
+  aes(x = Year, colour = FoodType, y = CaloriesPerDay) +
+  geom_line() +
+  theme_grey(base_size = 20)
+```
+
+```{r}
+ggplot(chinesemeal) +
+  aes(x = Year, colour = FoodType, y = CaloriesPerDay) +
+  geom_line() +
+  labs(
+    title = "Typical Diet of a Chinese Citizen"
+  ) +
+  theme(
+    title = element_text(size = 20, colour = "red", face = "bold")
+  )
+```
+
+```{r}
+?theme
+```
+
+```{r}
+ggplot(chinesemeal) +
+  aes(x = Year, colour = FoodType, y = CaloriesPerDay) +
+  geom_line() +
+  labs(
+    title = "Typical Diet of a Chinese Citizen"
+  ) +
+  theme(
+    axis.title.x = element_text(size = 20, colour = "red", face = "bold"),
+    panel.grid.major = element_line(colour = "black", linetype = "dotted", size = 0.3),
+    plot.background = element_rect(fill = "limegreen")
+  )
+```
+
+```{r}
+ggplot(chinesemeal) +
+  aes(x = Year, colour = FoodType, y = CaloriesPerDay) +
+  geom_line() +
+  labs(
+    title = "Typical Diet of a Chinese Citizen"
+  ) +
+  theme(
+    axis.title.x = element_text(size = 20, colour = "red", face = "bold"),
+    panel.grid.major = element_line(colour = "black", linetype = "dotted", size = 0.3),
+    plot.background = element_rect(fill = "limegreen"),
+    legend.text = element_blank()
+  )
+```
+
+```{r}
+install.packages("ggthemes")
+```
+
+```{r}
+library(ggthemes)
+```
+
+```{r}
+ggplot(scottish_exports) +
+  geom_line(aes(x = year, y = exports, colour = sector)) +
+  facet_wrap(~sector, scales = 'free_y') +
+  theme_excel() +
+  theme(
+    axis.title.x = element_text(size = 20, colour = "blue", face = "bold"),
+    axis.title.y = element_text(size = 20, colour = "blue", face = "bold")
+  )
+```
+
+Change order:
+make into ordered factor
+```{r}
+total_sales %>% 
+  mutate(branch = factor(branch, levels = c("London", "leeds", "Glasgow", "Leatherhed", "Edinburgh", "Manchester", "Welyn Garden City")))
+
+ggplot(total_sales) +
+  aes(x = branch, y = sales) +
+  geom_col() +
+  coord_flip()
+```
+
+```{r}
+total_sales <- total_sales %>% 
+  mutate(branch = fct_reorder(branch, sales))
+
+ggplot(total_sales) +
+  aes(x = branch, y = sales) +
+  geom_col() +
+  coord_flip()
+```
+
+
+
+
+
+
+
+
+
+
+
