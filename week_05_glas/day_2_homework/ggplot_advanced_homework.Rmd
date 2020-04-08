@@ -52,7 +52,9 @@ ggplot(qb_monthly_sales) +
 ```
 ```{r}
 qb_monthly_sales %>% 
-  filter(Cashflow$)
+  filter(Cashflow == "Kwikbit Unit 1 Sales") %>% 
+  ggplot(aes(x = Date, y = Amount, fill = Cashflow)) +
+  geom_line()
 ```
 
 
@@ -61,7 +63,7 @@ Q3.
 
 ```{r}
 qb_monthly_sales %>% 
-  select(Cashflow$Date)
+  select(Cash
 ```
 
 Q4.
