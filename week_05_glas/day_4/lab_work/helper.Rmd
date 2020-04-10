@@ -1,0 +1,51 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r}
+library(ggplot2)
+library(CodeClanData)
+library(dplyr)
+library(shiny)
+```
+
+```{r}
+View(students_big)
+```
+
+```{r}
+labels(students_big)
+```
+```{r}
+?geom_histogram
+```
+
+
+
+```{r}
+stud_height_chart <- ggplot(students_big) +
+  geom_histogram(aes(x = height))
+```
+
+```{r}
+stud_arm_chart <- ggplot(students_big) +
+  geom_histogram(aes(x = arm_span))
+```
+
+```{r}
+students_big %>% 
+  filter(ageyears == 11) %>% 
+ggplot() +
+  (aes(x = height)) +
+  geom_histogram()
+```
+
+```{r}
+students_big %>% 
+  filter(ageyears == 11) %>% 
+ggplot() +
+  (aes(x = arm_span)) +
+  geom_histogram()
+```
+
