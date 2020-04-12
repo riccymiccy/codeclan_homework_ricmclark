@@ -1,0 +1,39 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r}
+library(ggplot2)
+library(CodeClanData)
+library(dplyr)
+library(shiny)
+```
+
+```{r}
+students_big %>% 
+  ggplot() +
+  aes(x = gender) +
+  geom_bar()
+```
+
+```{r}
+?coord_polar
+```
+
+
+```{r}
+students_big %>% 
+  ggplot() +
+  aes(x = gender) +
+  geom_bar() +
+  coord_polar(theta = "x", start = 0, direction = 1)
+```
+
+```{r}
+
+```
+
+
+
+
