@@ -1,0 +1,43 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r}
+library(ggplot2)
+library(CodeClanData)
+library(dplyr)
+library(shiny)
+```
+
+```{r}
+View(students_big)
+```
+
+```{r}
+students_big %>% 
+  ggplot() +
+  aes(x = reaction_time, y = score_in_memory_game) +
+  geom_point()
+```
+
+```{r}
+mix_colours = c(Blue = "#3891A6", Yellow = "#FDE74C", Red = "#E3655B")
+```
+
+
+```{r}
+students_big %>% 
+  ggplot() +
+  aes(x = reaction_time, y = score_in_memory_game, fill = "Blue") +
+  geom_point()
+```
+
+
+
+
+
+
+
+
+

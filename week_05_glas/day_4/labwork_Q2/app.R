@@ -4,43 +4,54 @@ library(dplyr)
 library(shiny)
 
 ui <- fluidPage(
-    fluidRow(
-        column(12,
-               radioButtons("age",
-                            "Age",
-                            choices = 10:18, inline = TRUE)
-        ),
+    
+    titlePanel("Reaction Time vs Memory Game"),
+    
+    sidebarLayout(
+        sidebarPanel(
+            radioButtons("colour",
+                            "Colour of points",
+                            choices = c(Blue = "#3891A6", Yellow = "#FDE74C", Red = "#E3655B")
+                         
+                ),
+
         
+            sliderInput("trans_p",
+                             label = h3("Transparency of points"),
+                             min = 0, max = 1, value = 0.7),
+
+
+            selectInput("shape",
+                            label = h3("Shape of points"),
+                            choices = c("Square" = 15, "Circle" = 16, "Triangle" = 17)
+                        
+                )
     ),
-    fluidRow(
-        column(6,
-               plotOutput("stud_height_chart")
-        ),
-        column(6,
-               plotOutput("stud_arm_chart")
-        )
+        
+    
+    mainPanel(
+        plotOutput("mem_react_chart")
     )
+    
+    )
+    
 )
+    
+        
+
+    
+
 server <- function(input, output) {
     
     
     
-    output$stud_height_chart <- renderPlot({
+    output$mem_react_chart <- renderPlot({
         students_big %>% 
-            filter(ageyears == input$age) %>% 
             ggplot() +
-            aes(x = height) +
-            geom_histogram() 
+            aes(x = reaction_time, y = score_in_memory_game) +
+            geom_point() 
     })
     
-    output$stud_arm_chart <- renderPlot({
-        
-        students_big %>% 
-            filter(ageyears == input$age) %>% 
-            ggplot() +
-            aes(x = arm_span) +
-            geom_histogram()
-        
-    })
+    
 }
 shinyApp(ui = ui, server = server)
