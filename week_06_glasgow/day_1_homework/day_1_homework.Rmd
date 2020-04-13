@@ -1,0 +1,185 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+Q1.
+
+```{r}
+library(prob)
+library(tidyverse)
+library(gtools)
+```
+
+```{r}
+rolldie(1) %>% 
+  filter(X1 < 5)
+```
+
+```{r}
+4/6
+```
+
+
+Q2.
+```{r}
+three_dice <- rolldie(3)
+nrow(three_dice)
+```
+
+Q3.
+
+```{r}
+s_four_dice <- rolldie(4)
+total_size_four <- nrow(s_four_dice)
+
+total_5_6_7 <- s_four_dice %>% 
+  filter(X1 + X2 + X3 + X4 == 5:7)
+total_size_5_6_7 <- nrow(total_5_6_7)
+
+total_size_four
+total_size_5_6_7
+```
+
+i) 9
+ii)
+```{r}
+prob_5_6_7 <- 9 / 1296
+prob_5_6_7
+```
+
+iii) 0.006944444
+
+Question 4.
+
+Let's presume the heights are integers
+This is the same calculation as 5! as the subset is the same as the number
+
+```{r}
+heights <- 1:5
+
+order_heights <- as_tibble(permutations(n = 5,
+                                        r = 5,
+                                        v = heights,
+                                        repeats.allowed = FALSE))
+order_heights
+```
+
+Answer is:
+
+```{r}
+1/120
+```
+
+Question 5.
+(i)
+```{r}
+s_six_dice <- rolldie(6)
+s_six_dice
+```
+
+```{r}
+1 / 46656
+```
+
+(ii)
+```{r}
+six_dice <- 1:6
+
+all_six_numbers <- as_tibble(permutations(n = 6,
+                                        r = 6,
+                                        v = six_dice,
+                                        repeats.allowed = FALSE))
+all_six_numbers
+```
+
+
+```{r}
+1 / 720
+```
+
+Question 6.
+As the question states it is the probablity that the card is spades as it's already stated it's black
+```{r}
+13/ 26
+```
+
+Question 7.
+(i)
+```{r}
+patients <- c("Alice", "Bob", "Carmen", "Dinesh", "Ella", "Fergus", "Gianna", "Henry")
+
+five_patients <- as_tibble(permutations(n = 8,
+                                        r = 5,
+                                        v = patients,
+                                        repeats.allowed = FALSE))
+five_patients
+```
+
+```{r}
+?isin
+```
+
+
+(ii)
+```{r}
+gianna_dinesh_one <- isin(five_patients, "Gianna", ordered = FALSE)
+
+sum(gianna_dinesh_one)
+```
+
+
+```{r}
+gianna_dinesh_two <- isin(five_patients, "Dinesh", ordered = FALSE)
+
+sum(gianna_dinesh_two)
+```
+
+```{r}
+# ???
+```
+
+(iii) not saure how to answer this one
+
+Question 8.
+Let's give students letters A to H
+```{r}
+students <- c("A", "B", "C", "D", "E", "F", "G", "H")
+
+five_student_quiz <- as_tibble(permutations(n = 8,
+                                            r = 5,
+                                            v = students,
+                                            repeats.allowed = FALSE))
+five_student_quiz
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

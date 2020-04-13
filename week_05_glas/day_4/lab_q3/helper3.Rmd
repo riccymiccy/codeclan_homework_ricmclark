@@ -25,9 +25,9 @@ students_big %>%
 ```{r}
 students_big %>% 
   ggplot() +
-  aes(x = gender) +
+  aes(x = 1, fill = gender) +
   geom_bar() +
-  coord_polar(theta = "x", start = 0, direction = 1)
+  coord_polar("y")
 ```
 
 ```{r}
