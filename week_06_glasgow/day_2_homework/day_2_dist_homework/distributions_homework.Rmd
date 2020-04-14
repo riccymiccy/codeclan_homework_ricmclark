@@ -1,0 +1,197 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r}
+library(prob)
+library(tidyverse)
+library(janitor)
+library(e1071)
+library(skimr)
+```
+
+```{r}
+mob_shop <- read_csv("data/20190928-items.csv")
+
+mob_shop
+```
+
+```{r}
+colnames(mob_shop, do.NULL = TRUE, prefix = "col")
+```
+
+```{r}
+mob_shop <- clean_names(mob_shop)
+```
+
+```{r}
+mob_shop %>% 
+  group_by(brand) %>% 
+  summarise()
+```
+
+```{r}
+mob_brands <- c("Apple", "ASUS", "Google", "HUAWEI",	"Motorola", "Nokia", "OnePlus", "Samsung", "Sony", "Xiaomi")
+```
+
+```{r}
+mob_shop %>% 
+  group_by(brand) %>% 
+  count()
+```
+
+The most popular brand in this dataset is Samsung
+
+```{r}
+samsung_mob <- mob_shop %>% 
+  filter(brand == "Samsung")
+
+samsung_mob
+```
+
+```{r}
+getMode <- function(data){
+  tabled_data <- table(data)
+  table_names <- names(tabled_data)
+  return( table_names[tabled_data == max(tabled_data)] )
+}
+```
+
+```{r}
+samsung_mob %>% 
+  skim(rating)
+```
+
+Looking at the figures here we can expect this to be left skewed as majority of ratings are 3.3 through to 5 score. The standard deviation is less than 1 which is low variance.
+
+```{r}
+samsung_mob %>% 
+  summarise(mode_samsung_rating = getMode(rating))
+```
+The mode is very similar to the mean and exactly the same as the median making the mean a good calculation.
+
+
+```{r}
+samsung_mob %>% 
+  ggplot(aes(y = rating)) +
+  geom_boxplot()
+```
+There are a few outliers in the lower end of the scoring.
+
+
+```{r}
+library(MASS)
+```
+
+```{r}
+samsung_mob %>% 
+  fitdistr(x = rating)
+```
+
+```{r}
+samsung_mob %>% 
+  ggplot(aes(x = rating, bins = 25)) +
+  geom_histogram()
+  
+```
+
+```{r}
+samsung_mob %>% 
+  ggplot(aes(x = rating)) +
+  geom_histogram(aes(y = ..density..), col = "white", bins = 30) +
+  stat_function(
+    fun = dnorm, 
+    args = list(
+      mean = 3.57, 
+      sd = 0.685
+    ),
+    col = "red"
+  )
+```
+
+The distribution fits the graph reasonably well. It would appear there may be two modes.
+
+```{r}
+samsung_mob %>% 
+  group_by(rating) %>% 
+  count() %>% 
+  arrange(desc(n))
+```
+
+However you can clearly see that is not the case.
+
+```{r}
+samsung_mob_rat <- samsung_mob %>% 
+  dplyr::select(rating)
+```
+
+```{r}
+samsung_mob_rat %>%
+  filter(rating >= 3.57 - 0.685) %>%
+  filter(rating <= 3.57 + 0.685) %>%
+  summarise(prop_within_1sd = n() / nrow(samsung_mob_rat))
+```
+
+```{r}
+samsung_mob %>% 
+  ggplot(aes(x = rating)) +
+  geom_histogram(aes(y = ..density..), col = "white", bins = 30) +
+  stat_function(
+    fun = dnorm, 
+    args = list(
+      mean = 3.57, 
+      sd = 0.7934509
+    ),
+    col = "red"
+  )
+```
+
+
+
+```{r}
+samsung_mob_rat %>%
+  filter(rating >= 3.57 - 2 * 0.685) %>%
+  filter(rating <= 3.57 + 2 * 0.685) %>%
+  summarise(prop_within_2sd = n() / nrow(samsung_mob_rat))
+```
+
+
+```{r}
+samsung_mob %>% 
+  ggplot(aes(x = rating)) +
+  geom_histogram(aes(y = ..density..), col = "white", bins = 30) +
+  stat_function(
+    fun = dnorm, 
+    args = list(
+      mean = 3.57, 
+      sd = 0.9219144
+    ),
+    col = "red"
+  )
+```
+
+
+
+
+```{r}
+samsung_mob_rat %>%
+  filter(rating >= 3.57 - 3 * 0.685) %>%
+  filter(rating <= 3.57 + 3 * 0.685) %>%
+  summarise(prop_within_3sd = n() / nrow(samsung_mob_rat))
+```
+
+```{r}
+samsung_mob %>% 
+  ggplot(aes(x = rating)) +
+  geom_histogram(aes(y = ..density..), col = "white", bins = 30) +
+  stat_function(
+    fun = dnorm, 
+    args = list(
+      mean = 3.57, 
+      sd = 0.9798489
+    ),
+    col = "red"
+  )
+```
+
