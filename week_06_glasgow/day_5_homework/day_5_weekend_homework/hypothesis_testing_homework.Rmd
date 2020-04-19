@@ -1,0 +1,243 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r}
+library(tidyverse)
+data(msleep)
+library(janitor)
+library(infer)
+library(skimr)
+```
+
+Question 1.1
+
+```{r}
+glimpse(msleep)
+```
+
+```{r}
+msleep <- clean_names(msleep)
+```
+
+```{r}
+glimpse(msleep)
+```
+
+```{r}
+msleep
+```
+
+```{r}
+msleep %>% 
+  summarise(mean_sleep_total = mean(sleep_total))
+```
+
+```{r}
+mean_sleep_total <- msleep %>% 
+  summarise(mean_sleep_total = mean(sleep_total))
+```
+
+```{r}
+jabber_wock_sleep <- 7.00
+```
+
+```{r}
+per_cent_less_jabb_sleep <- (jabber_wock_sleep - mean_sleep_total) / mean_sleep_total
+
+per_cent_less_jabb_sleep
+```
+
+
+
+The mean sleep total is much greater than the mean for Jabberwockies. They sleep for 32.9% less per night than the average for other animals.
+
+```{r}
+msleep %>% 
+  filter(vore == "herbi") %>% 
+  summarise(mean_sleep_herbi = mean(sleep_total))
+```
+
+```{r}
+msleep %>% 
+  filter(vore == "omni") %>% 
+  summarise(mean_sleep_omni = mean(sleep_total))
+```
+
+```{r}
+mean_sleep_herbi <- msleep %>% 
+  filter(vore == "herbi") %>% 
+  summarise(mean_sleep_herbi = mean(sleep_total))
+
+mean_sleep_omni <- msleep %>% 
+  filter(vore == "omni") %>% 
+  summarise(mean_sleep_omni = mean(sleep_total))
+
+(mean_sleep_omni - mean_sleep_herbi) / mean_sleep_omni
+```
+
+Omnivores sleep on average 13.0% more tan Herbivores.
+
+Determine whether the proportion of domesticated animal types in the population of animal types is greater than 5%.
+
+First I mist add in a column that flahs whether the animal is domesticated
+
+
+```{r}
+sleep_domest <- msleep %>% 
+  mutate(is_domesticated = conservation == "domesticated")
+```
+
+```{r}
+sleep_domest
+```
+
+Now I am going to caluclate the proportion of animals that we know are domesticated.
+
+```{r}
+sleep_domest %>% 
+  group_by(is_domesticated) %>% 
+  summarise(prop = n() / nrow(msleep)) %>% 
+  filter(is_domesticated == TRUE)
+```
+
+In this datset the proportion is 12.05% and is therefore greater than 5%.
+
+Question 1.2
+
+
+
+The coffee shop: Simulation
+
+H0: (the null hypothesis) the current awareness of the coffee shop in the town is 40% which was the score after the first survey was completed
+
+H0: π average awareness = 0.40
+
+Ha: (the alternative hypothesis) is that after performing a marketing campaign flyering local venues and targeting adverts on social media, here has been increase in awareness in the town of your coffee shop.
+
+Ha: π average awareness ≠ 0.40
+
+As this is a proportional we would need a variable heading: "aware_of_coffee_shop" answer: "TRUE" OR "FALSE".
+
+I would perform a  proportion calculation:
+
+tibble %>% 
+  group_by(aware_of_coffee_shop) %>% 
+  summarise(prop = n()/nrow(tibble)) %>%
+  filter(aware_of_coffee_shop == TRUE)
+
+Then I would decide upon a significance level α "alpha" = 0.05 typically.
+
+Next we calculate the statistic we are interested in:
+
+Number of people aware of coffee shop in town / number of people in town asked from the new sample. 
+
+Then we crate a sampling distribution for the null hypothesis  called the null sampling distribution.
+
+Then we see where our statistic falls on the null sampling distribution, calculating the probability of getting a statistic equal to or greater than our observed value.
+
+If the p value is less than or equal to α then we reject the null hypothesis in favour of the alternative hypothesis.
+
+If the p-value is greater than α then we fail to reject the null hypothesis.
+
+null_distribution <- tibble %>%
+  specify(response = aware_of_coffee_shop, success = TRUE) %>% 
+  hypothesize(null = "point", p = 0.45) %>% # let's say the new % is 45%
+  generate(reps = 1000, type = "simulate") %>%
+  calculate(stat = "prop")
+  
+null_distribution %>%
+  visualise()
+  
+observed_stat <- tibble %>% 
+  specify(response = aware_of_coffee_shop, success = TRUE) %>% 
+  calculate(stat = "prop")
+
+observed_stat
+
+null_distribution %>%
+  visualise() +
+  shade_p_value(obs_stat = observed_stat, direction = "right") # it;s right bewcause we're expecting it to be greater
+
+p_value <- null_distribution %>%
+  get_p_value(obs_stat = observed_stat, direction = "right")
+
+p_value
+
+Website Design A / B test - permutations
+
+This is a hypothesis test with two independent samples where we are interested in the difference in proportions of each sample group that clicked through (clicked through rate: CTR)
+
+H0 π banner at right - π banner at top = 0
+Ha π banner at right - π banner at top ≠ 0
+
+observed_stat <- banners %>% 
+  specify(banner_type ~ click_through, success = "banner at top") %>% 
+  calculate(stat = "diff in props", order = c("banner_right", "banner_top"))
+
+observed_stat
+
+null_distribution <- banner %>%
+  specify(banner_type ~ click_through, success = "banner at top") %>% 
+  hypothesize(null = "independence") %>% 
+  generate(reps = 1000, type = "permute") %>%
+  calculate(stat = "diff in props", order = c("banner_right", "banner_top"))
+
+head(null_distribution)
+
+null_distribution %>%
+  visualise() +
+  shade_p_value(obs_stat = observed_stat, direction = "both")
+
+We say both because we don't which way it will go.
+
+p_value <- null_distribution %>%
+  get_p_value(obs_stat = observed_stat, direction = "both")
+
+p_value
+
+Car Manufacturing Company Quality Control - bootsrap
+
+H0 µ average width = 145mm
+Ha µ average width ≠ 145mm
+
+observed_stat <- car_parts %>%
+  summarise(mean_size = mean(part_size))
+
+observed_stat
+
+null_distribution <- car_parts %>%
+  specify(response = average_rating) %>%
+  hypothesize(null = "point", mu = 145) %>%
+  generate(reps = 10000, type = "bootstrap") %>%
+  calculate(stat = "mean")
+  
+null_distribution %>%
+  visualise(bins = 30)
+  
+  
+null_distribution %>%
+  visualise(bins = 30) +
+  shade_p_value(obs_stat = observed_stat$mean_rating, direction = "both")
+  
+p_value <- null_distribution %>%
+  get_p_value(obs_stat = observed_stat$mean_size, direction = "both")
+p_value
+
+Q1.2.2.
+
+Coffee shop: Significance level: 0.05, calculated p-value: 0.07 - p value is greater so we fail to reject the null hypothesis
+
+Website company problem. Significance level: 0.01, p-value: 0.006 - p value is lower than alpha so we reject the null hypothesis in favour of the laternative hypothesis
+
+Manufacturing company problem. Significance level: 0.05, p-value: 0.55 - p value is greater so we fail to reject the null hypthesis.
+
+
+
+
+
+
+
+
+
