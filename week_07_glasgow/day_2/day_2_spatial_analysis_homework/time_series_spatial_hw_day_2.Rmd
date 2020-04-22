@@ -1,0 +1,201 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r}
+library(tidyverse)
+library(lubridate)
+library(tsibble)
+library(tsibbledata)
+library(fable)
+```
+
+```{r}
+nyc_bikes
+```
+
+```{r}
+names(nyc_bikes)
+```
+
+Question 1.
+
+```{r}
+nyc_bikes_times <- nyc_bikes %>% 
+  mutate(year = year(start_time)) %>% 
+  mutate(month = month(start_time)) %>% 
+  mutate(date = date(start_time))
+
+nyc_bikes_times
+```
+
+Question 2.
+
+```{r}
+nyc_bikes_index <- nyc_bikes_times %>% 
+  index_by(month) %>% 
+  summarise(monthly_bike_hire = n())
+
+nyc_bikes_index
+```
+
+```{r}
+nyc_bikes_index %>% 
+  ggplot(aes(x = month, y = monthly_bike_hire)) +
+  geom_line()
+```
+This isn't very much data by which to come up with a forecast. it is only one calendar year and shows a seasonal variation in one iteration.
+
+
+Question 3.
+
+```{r}
+nyc_bikes_date_index <- nyc_bikes_times %>% 
+  index_by(date) %>% 
+  summarise(daily_bike_hire = n())
+
+nyc_bikes_date_index
+```
+
+```{r}
+nyc_bikes_date_index %>% 
+  ggplot(aes(x = date, y = daily_bike_hire)) +
+  geom_line()
+```
+
+This might be OK for a monthly forecast but not for a quarter or year. Ideally we would need 2 - 3 years data.
+
+Question 4.
+
+```{r}
+nyc_bikes_filled <- nyc_bikes_date_index %>%
+  fill_gaps(daily_bike_hire = as.integer(median(daily_bike_hire)))
+```
+
+
+
+```{r}
+nyc_fit <- nyc_bikes_filled %>% 
+  filter_index("2018-01-01" ~ "2018-12-31")
+
+nyc_forecast <- nyc_fit %>% 
+  model(
+    naive_model = NAIVE(daily_bike_hire),
+    mean_model = MEAN(daily_bike_hire),
+    snaive_model = SNAIVE(daily_bike_hire)
+  )
+
+nyc_forecast_2019 <- nyc_forecast %>% 
+  forecast(h = 120)
+```
+
+```{r}
+nyc_forecast_2019
+```
+
+Question 5.
+
+```{r}
+nyc_forecast_2019 %>% 
+  autoplot(nyc_fit, level = NULL)
+```
+
+Question 6.
+
+```{r}
+nyc_accuracy_model <- nyc_forecast_2019 %>% 
+  accuracy(nyc_bikes_filled)
+
+nyc_accuracy_model %>% 
+  arrange(RMSE)
+```
+
+Question 7.
+
+I am not entirely sure what my testing of the model proved or if I have done it correctly.
+
+I don't think the forecast is terribly accurate as there was a gradual trend upwards in the same period the prior year.
+
+I would like more data but I would also like to use a different model that mirrored the cyclical element of the year 
+
+Question 8.
+
+```{r}
+nyc_bikes_filled
+```
+
+```{r}
+nyc_bikes_times
+```
+
+
+```{r}
+nyc_bikes_spatial <- nyc_bikes_times %>% 
+  mutate(end_month = month(stop_time))
+
+```
+
+```{r}
+nyc_bike_spatial_adj <- nyc_bike_spatial %>% 
+  select(bike_id, start_lat, start_long, end_lat, end_long, date, end_month)
+```
+
+```{r}
+nyc_bike_spatial_adj %>% 
+  ggplot(aes(x = start_lat, y = start_long, colour = date)) +
+  facet_wrap(~bike_id) +
+  geom_point() +
+  ggtitle("Start Points")
+```
+
+```{r}
+nyc_bike_spatial_adj %>% 
+  ggplot(aes(x = end_lat, y = end_long, colour = date)) +
+  facet_wrap(~bike_id) +
+  geom_point() +
+  ggtitle("Finish Points")
+```
+
+```{r}
+library(leaflet)
+```
+
+```{r}
+nyc_bike_spatial_adj %>% 
+  leaflet() %>% 
+  addTiles() %>% 
+  addMarkers(
+    lng = ~start_long,
+    lat = ~start_lat
+  )
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
