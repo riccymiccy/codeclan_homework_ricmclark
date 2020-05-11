@@ -30,9 +30,8 @@ view(health_board)
 ```{r}
 health_board %>%
   filter(HB == "S08000016") %>% 
-  filter(CancerSite == "All Cancer Types") %>% 
-  ggplot(aes(x = Year, y = IncidencesAllAges)) +
-  geom_point() +
+  filter(CancerSite == "All cancer types") %>% 
+  ggplot(aes(x = Year, y = IncidencesAllAges) )+
   geom_line()
 ```
 

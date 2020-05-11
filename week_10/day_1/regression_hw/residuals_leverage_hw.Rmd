@@ -1,0 +1,55 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r}
+library(tidyverse)
+```
+
+```{r}
+project <- read_csv("data/project_management.csv")
+```
+
+```{r}
+class(project)
+```
+
+```{r}
+project
+```
+
+```{r}
+project %>% 
+  ggplot(aes(x = estimated_length, y = actual_length)) +
+  geom_point() +
+  geom_text(aes(label = 1:nrow(project)))
+```
+
+```{r}
+project_model <- lm(formula = actual_length ~ estimated_length, data = project)
+
+project_model
+```
+
+```{r}
+par(mfrow=c(2,2))
+plot(project_model)
+```
+
+```{r}
+project %>% 
+  summarise(cor = cor(estimated_length, actual_length))
+```
+
+
+
+
+
+
+
+
+
+
+
+
