@@ -1,0 +1,94 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r}
+library(tidyverse)
+```
+
+```{r}
+diamonds <- read_csv("data/diamonds.csv")
+```
+
+```{r}
+glimpse(diamonds)
+```
+
+```{r}
+diamonds
+```
+
+```{r}
+library(GGally)
+```
+
+```{r}
+summary(diamonds)
+```
+
+There are no n/a's in the dataset as above.
+
+```{r}
+ggpairs(diamonds)
+```
+
+```{r}
+diamonds_model1 <- lm(carat ~ x + y + z, data = diamonds)
+```
+
+```{r}
+summary(diamonds_model1)
+```
+
+```{r}
+diamonds_drop <- diamonds %>% 
+  select(-x, -y, -z)
+```
+
+```{r}
+diamonds_drop
+```
+
+```{r}
+ggpairs(diamonds_drop)
+```
+
+```{r}
+library(fastDummies)
+```
+
+```{r}
+diamonds_model2 <- lm(carat ~ price, data = diamonds_drop)
+```
+
+```{r}
+summary(diamonds_model2)
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
