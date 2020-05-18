@@ -1,0 +1,165 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r}
+library(tidyverse)
+```
+
+```{r}
+avocado <- read_csv("data/avocado.csv")
+avocado
+```
+
+I am checking here whether there is any missing values in the dataset. There are in fact zero N/A's - see below.
+
+```{r}
+summary(avocado)
+```
+
+```{r}
+library(GGally)
+```
+
+In an effort to reduce the amount of variables, I am going to exclude index, the bag sizes (because we have no information about how much they hold), the year and the region. I am going to add two variables: month (to try to correlate any cyclical element to average price), other_avocados: for the the remainder avocados not listed under the 3 PLU codes.
+
+```{r}
+library(lubridate)
+```
+```{r}
+library(janitor)
+```
+
+```{r}
+avocado <- clean_names(avocado)
+```
+
+```{r}
+avocado
+```
+
+
+```{r}
+avocado_trim <- avocado %>% 
+  mutate(month = month(date)) %>% 
+  mutate(other_avocados = (total_volume - (x4046 + x4225 + x4770))) %>% 
+  select(month, average_price, x4046, x4225, x4770, other_avocados, type, month)
+```
+
+```{r}
+avocado_trim
+```
+
+Now I will plot some visualisation to see if I can identify some variable relationships for average_price
+
+```{r}
+ggpairs(avocado_trim)
+```
+
+Looking at the R squared values here, it would appear that month has the greatest correlation to average price so this is where we shall start.
+
+```{r}
+avocado_trim %>% 
+  ggplot(aes(x = month, y = average_price)) +
+  geom_point() +
+  geom_smooth()
+```
+
+The graph above is not conclusive because prices seem to stretch up and down but there is a suggestion that apart from some outliers, average price peaks around the end of summer (Aug) to early Autumn (Sep/Oct)
+
+So I will build the model with average price and month
+
+```{r}
+avocado_mod1 <- lm(average_price ~ month, data = avocado_trim)
+```
+
+```{r}
+summary(avocado_mod1)
+```
+
+The R squared figure isn't high but it wasn't when we originally plotted it. 
+
+I will now plot against the regression comparisons.
+
+Residuals vs fitted is around nil which is correct. Normal Q-Q is following the dotted line which is also a good correlation. Scale-Location is relatively flat which is also good and not indicating a trend.
+
+```{r}
+par(mfrow = c(2,2))
+plot(avocado_mod1)
+```
+
+Looking back again at the GGpairs data, type doesn't appear to have any bearing as the box plot indicates no difference in whether organic or not.
+
+I am inclined to add all the avocado PLU's together (but separate) into the model to distinguinsdh between them.
+
+```{r}
+avocado_mod2 <- lm(average_price ~ month + x4046 + x4225 + x4770 + other_avocados, data = avocado_trim)
+```
+
+```{r}
+summary(avocado_mod2)
+```
+
+This would indicate "other avocados" is not significant so I will delete that for model 3.
+
+```{r}
+avocado_mod3 <- lm(average_price ~ month + x4046 + x4225 + x4770, data = avocado_trim)
+
+summary(avocado_mod3)
+```
+
+```{r}
+par(mfrow = c(2,2))
+plot(avocado_mod3)
+```
+
+Unfortunately model 3 does not show peomise with the residulas vs fotted as the trend is moving away from nil. The scale location has a definite trend downwards which is also not helpful. The Mormal Q-Q graph follows the odtted line.
+
+Therefore model 1: avocado_mod1 <- lm(average_price ~ month, data = avocado_trim) appears to be the most accurate.
+
+And here are answer to the quiz on regaressionn models:
+
+1. overfitting
+2. the one with the score of 33,559
+3. the one with an adjusted r squared value of 0.43
+4. No
+5. it goes through each iteration testing one and using the rest as control subjects.
+6. It's a data set that has been cleaned for use in the refgrssion analysis
+7. 
+8.
+9. Keep it simple, make it as uncomplicated as possible, include commentary and justifciation
+10. log
+11. 
+12.
+13.
+14.
+15.
+16. To show that you are applying your knowledge and adding value
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
