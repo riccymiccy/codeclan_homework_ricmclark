@@ -1,0 +1,145 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r}
+library(tidyverse)
+library(janitor)
+```
+
+```{r}
+library(readxl)
+```
+
+```{r}
+telecomms <- read_xlsx("telecomms_churn.xlsx")
+```
+
+```{r}
+telecomms
+```
+
+```{r}
+summary(telecomms)
+```
+
+```{r}
+telecomms_clean <- clean_names(telecomms)
+```
+
+t
+
+```{r}
+telecomms_clean
+```
+
+```{r}
+telecomms_clean %>% 
+  select(total_charges is.na)
+```
+
+```{r}
+library(GGally)
+```
+
+```{r}
+telecomms_clean %>% 
+  alias(total_charges ~ .)
+```
+
+
+I have decided to de-select the variable total charges. There are 11 missing variables here and we already have monthly charges and number of years customer has been with the provider.
+
+I am also getting rid of customer_id as that is irrelevant.
+
+```{r}
+telecoms_trim <- telecomms_clean %>% 
+  select(-c(customer_id, total_charges))
+```
+
+```{r}
+telecoms_trim
+```
+
+```{r}
+telecoms_trim %>% 
+  ggplot(aes(x = monthly_charges, y = tenure, colour = "churn")) +
+  geom_line()
+```
+
+```{r}
+telecoms_trim %>% 
+  ggplot(aes(x = gender, colour = "churn")) +
+  geom_bar()
+```
+
+```{r}
+telecoms_trim %>% 
+  class("gender") %>% 
+  class(senior_citizen) %>% 
+  class(partner) %>% 
+  class(dependents) %>% 
+  class(tenure) %>% 
+  class(phone_service) %>% 
+  class(internet_service) %>% 
+  class(contract) %>% 
+  class(monthly_charges) %>% 
+  class(churn)
+```
+
+```{r}
+ggpairs(telecoms_trim)
+```
+
+```{r}
+class(telecoms_trim)
+```
+
+```{r}
+telecoms_trim %>% 
+  mutate_if((c(gender, senior_citizen, partner, dependents, tenure, phone_service, internet_service, contract, monthly_charges)is.character) = as.factor)
+```
+
+```{r}
+telecoms_trim_model1 <- lm(as.numeric(churn) ~ monthly_charges, data = telecoms_trim)
+```
+
+```{r}
+telecoms_logreg_model1 <- glm(churn ~ monthly_charges, data = telecoms_trim, family = binomial(link = 'logit'))
+telecoms_logreg_model1
+```
+
+OK I am totally bemused. I do not understand what I am doing.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
