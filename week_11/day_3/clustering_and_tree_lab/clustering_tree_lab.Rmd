@@ -1,0 +1,242 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r}
+library(tidyverse)
+library(rpart)
+library(rpart.plot)
+```
+
+```{r}
+avocado <- read_csv("data/avocado.csv")
+```
+
+```{r}
+head(avocado)
+```
+
+```{r}
+summary(avocado)
+```
+
+```{r}
+library(janitor)
+clean_avocado <- clean_names(avocado)
+```
+
+```{r}
+clean_avocado
+```
+
+```{r}
+clean_avocado <- clean_avocado %>% 
+  select(-c(x1, date))
+
+clean_avocado
+```
+
+```{r}
+n_data <- nrow(clean_avocado)
+
+test_index <- sample(1:n_data, size = n_data*0.2)
+
+avocado_test  <- slice(clean_avocado, test_index)
+
+avocado_train <- slice(clean_avocado, -test_index)
+```
+
+```{r}
+avocado_test %>% 
+  tabyl(type)
+```
+
+```{r}
+avocado_train %>% 
+  tabyl(type)
+```
+
+```{r}
+avocado_fit <- rpart(type ~ ., 
+                     data = avocado_train, 
+                     method = 'class')
+
+rpart.plot(avocado_fit, yesno = 2)
+```
+
+```{r}
+rpart.rules(avocado_fit, cover = TRUE)
+```
+
+```{r}
+library(modelr)
+```
+
+```{r}
+avocado_test_pred <- avocado_test %>%
+                 add_predictions(avocado_fit, type = 'class')
+```
+
+```{r}
+avocado_test_pred %>%
+  select(type)
+```
+
+```{r}
+rpart.predict(avocado_fit, newdata=avocado_test[1:3,], rules=TRUE)
+```
+
+```{r}
+library(yardstick)
+
+conf_mat <- avocado_test_pred %>%
+              conf_mat(truth = type, estimate = pred)
+
+conf_mat
+```
+
+Clustering homework
+
+```{r}
+computers <- read_csv("data/computers.csv") %>% 
+  clean_names()
+```
+
+```{r}
+computers
+```
+
+```{r}
+computers <- computers %>% 
+  select(hd, ram)
+
+computers
+```
+
+```{r}
+computer_scale <- computers %>% 
+  mutate_all(scale)
+
+computer_scale
+```
+
+```{r}
+ggplot(computer_scale, aes(hd, ram)) +
+  geom_point()
+```
+
+It looks there are definite clusters, maybe 6.
+
+
+```{r}
+clustered_computers <- kmeans(computer_scale, centers = 6, nstart = 25)
+
+clustered_computers
+```
+
+```{r}
+library(broom)
+
+tidy(clustered_computers,
+     col.names = colnames(computer_scale))
+```
+
+```{r}
+glance(clustered_computers)
+```
+
+```{r}
+augment(clustered_computers, computers)
+```
+
+```{r}
+library(animation)
+
+computer_scale %>% 
+  kmeans.ani(centers = 6)
+```
+
+```{r}
+max_k <- 20
+
+k_clusters <- tibble(k = 1:max_k) %>%
+  mutate(
+    kclust = map(k, ~ kmeans(computer_scale, .x, nstart = 25)), 
+    tidied = map(kclust, tidy),
+    glanced = map(kclust, glance),
+    augmented = map(kclust, augment, computers)
+  )
+
+k_clusters
+```
+
+```{r}
+clusterings <- k_clusters %>%
+  unnest(glanced)
+
+clusterings
+```
+
+```{r}
+ggplot(clusterings, aes(x=k, y=tot.withinss)) +
+  geom_point() +
+    geom_line() +
+    scale_x_continuous(breaks = seq(1, 20, by = 1))
+```
+
+Looks like K might be 3.
+
+```{r}
+library(factoextra)
+
+fviz_nbclust(computer_scale, kmeans, method = "wss", nstart = 25)
+```
+
+```{r}
+fviz_nbclust(computer_scale, kmeans, method = "silhouette", nstart = 25)
+```
+
+3 is still looking good and so are 7, 9 and 10
+
+```{r}
+fviz_nbclust(computer_scale, kmeans, method = "gap_stat", nstart = 25, k.max = 10)
+```
+
+7 is the winner or 3
+
+```{r}
+clusterings %>% 
+  unnest(cols = c(augmented)) %>%
+  filter(k <= 10) %>%
+ ggplot(aes(x = hd, y = ram)) +
+  geom_point(aes(color = .cluster)) + 
+  facet_wrap(~ k)
+```
+
+3 in my opinion is the winner.
+
+```{r}
+clusterings %>% 
+  unnest(cols = c(augmented)) %>%
+  filter(k == 3) %>%
+ ggplot(aes(x = hd, y = ram, colour = .cluster)) +
+  geom_point(aes(color = .cluster))
+
+```
+
+I think the clustering worked well. The 3rd cluster is a but "out there" but it's still an accurate representation.
+
+
+```{r}
+clusterings %>% 
+  unnest(augmented) %>%
+  filter(k == 2) %>%
+  group_by(.cluster) %>%
+  summarise(mean(hd), mean(ram))
+```
+
+
+
+
+
